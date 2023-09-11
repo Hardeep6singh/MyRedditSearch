@@ -1,0 +1,115 @@
+<!--********************************************************************************** 
+    ITC5202 – Project* I declare that this assignment is my own work in accordance with Humber Academic Policy.
+    * No part of this assignment has been copied manually or electronically from any other source* (including web sites) or distributed to other students.
+    ** Group member Name: Hardeep Singh, Deepanshu  Student IDs: N01512362, N01517248 Date:_08/08/2022
+    **********************************************************************************/-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css"
+        integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Step4</title>
+    <style>
+        .header {
+            background: skyblue;
+            text-align: center;
+            font-size: 18px;
+
+        }
+
+        body {
+            background-color: aquamarine;
+            font-size: 80%;
+            font-weight: 400;
+        }
+
+        h3 {
+            text-align: center;
+        }
+        .box {
+            background-color: darkgray;
+        }
+    </style>
+    <!-- step 1: jQuery CDN to the project-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="header">
+        <br>
+        <form action="#" name="SearchForm">
+            <div class="seachheader">
+                <label id="sh">Search Reddit</label><br>
+            </div>
+            <input id="search" type="text"><br><br>
+            <label>Sort By: </label><br>
+            Relevance
+            <input type="radio" name="radio" value="relevance"> <br>
+            Latest
+            <input type="radio" name="radio" value="new">
+            <br><br>
+            <label>Limit</label><br>
+            <input id="limit" type="text"><br><br>
+            <input type="button" value="Search" onclick=getData()>
+        </form>
+        <br> <br>
+    </div>
+    <p id="doc"></p>
+    <script>
+        function getData() {
+            if ((!$("input[name='radio']:checked").val()) || (!$("#search").val()) || (!$("#limit").val())) {
+                alert('All fields are required');
+                return false;
+            }
+            else {
+                var sortVal = $('input[name="radio"]:checked').val();
+                var subreddit = $("#search").val();
+                var limit = $("#limit").val();
+            }
+            output = "<div class='mainouter'>";
+            output += "<div class='row'>";
+
+            fetch(`https://www.reddit.com/search.json?q=${subreddit}&limit=${limit}&sort=${sortVal}`) 
+                .then(res => {
+                    return res.json();
+                })
+                .then(function (data) {
+                    $.each(data.data.children, (j, item) => {
+                        let image = item.data.preview ?
+                            item.data.preview.images[0].source.url :
+                            'https://cdn.comparitech.com/wp-content/uploads/2017/08/reddit-1.jpg';
+                        if (j % 3 == 0) {
+                            output += "</div><div class='row'>";
+                        }
+                        var readMoreURL = "https://www.reddit.com" + item.data.permalink;
+                        output += `
+                    <div class="col-sm-4">
+                        <div class="card text-right">
+                            <img class="card-img-top" src="${image}" alt="Card image cap" height=300px width=400px>
+                            <div class="card-body">
+                                 <h5 class="card-title">${item.data.title}</h5>
+                                <a href="${readMoreURL}" target="_blank " class="btn btn-primary">Read More</a><br>
+                                <span class="badge badge-secondary">Subreddit: ${item.data.subreddit}</span><br>
+                                <span class="badge badge-dark">Score: ${item.data.score}</span>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                    });
+                    output += "</div>";
+                    $("#doc").html(output);
+                })
+                .catch(function () {
+                    alert("Error Wile fetching API");
+                });
+        }
+    </script>
+</body>
+
+</html>

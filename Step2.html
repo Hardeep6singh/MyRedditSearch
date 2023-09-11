@@ -1,0 +1,110 @@
+<!--********************************************************************************** 
+    ITC5202 – Project* I declare that this assignment is my own work in accordance with Humber Academic Policy.
+    * No part of this assignment has been copied manually or electronically from any other source* (including web sites) or distributed to other students.
+    ** Group member Name: Hardeep Singh, Deepanshu  Student IDs: N01512362, N01517248 Date:_08/08/2022
+    **********************************************************************************/-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step2</title>
+    <style>
+        body {
+            background-color: rgb(179, 249, 253);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #04AA6D;
+            color: white;
+        }
+    </style>
+    <!-- step 1: jQuery CDN to the project-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
+
+    </script>
+
+    <!-- Step2: Build jQuery Block-->
+    <script>
+        $(document).ready(function () {
+            $('#search').click(function () {
+                var data = $("#Fieldset #searchInput").val();
+                if (data == "")
+                    alert("All fields are required");
+                else {
+                    fetch(`https://api.pushshift.io/reddit/search/comment/?q=${data}&limit=100`)
+                        .then(res => {
+                            console.log(res);
+                            return res.json();
+                        })
+                        .then(function (data) {
+                            console.log(data.data);
+                            data.data.sort((a, b) => (a.body > b.body) ? 1 : ((b.body > a.body) ? -1 : 0))
+                            var array = data.data;
+                            let output = "<table border='1'> ";
+                            output += "<tr>";
+                            output += "<th>" + "body" + "</th>";
+                            output += "<th>" + "Author" + "</th>";
+                            output += "<th>" + "Subreddit" + "</th>";
+                            output += "<th>" + "Url" + "</th>";
+                            output += "<th>" + "Score" + "</th>";
+                            output += "<th>" + "Flair" + "</th>";
+                            output += "</tr>";
+
+                            array.forEach(element => {
+                                output += "<tr>";
+                                output += "<td>" + element.body + "</td>";
+                                output += "<td>" + element.author + "</td>";
+                                output += "<td>" + element.subreddit + "</td>";
+                                output += "<td> <a href=https://www.reddit.com" + element.permalink + ">www.reddit.com" + element.permalink + "</a></td>";
+                                output += "<td>" + element.score + "</td>";
+                                var flair = "no flairs";
+                                if (element.author_flair_text != null) {
+                                    flair = element.author_flair_text
+                                }
+                                output += "<td>" + flair + "</td>"
+                                output += "</tr>"
+                            })
+                            output += "</table>"
+                            $('p').html(output);
+                        })
+                        .catch(() => {
+                            alert("Error while fetching API");
+                        });
+                }
+            })
+        });
+
+    </script>
+</head>
+
+<body>
+    <h3>Search Reddit: </h3>
+    <fieldset id="Fieldset">
+        <label for="search">Search:</label>
+        <input type="text" id="searchInput"><br><br>
+        <input type="button" value="submit" id="search">
+
+    </fieldset>
+    <p id="data"> </p>
+</body>
+
+</html>

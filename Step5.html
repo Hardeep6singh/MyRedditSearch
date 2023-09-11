@@ -1,0 +1,102 @@
+<!--********************************************************************************** 
+    ITC5202 – Project* I declare that this assignment is my own work in accordance with Humber Academic Policy.
+    * No part of this assignment has been copied manually or electronically from any other source* (including web sites) or distributed to other students.
+    ** Group member Name: Hardeep Singh, Deepanshu  Student IDs: N01512362, N01517248 Date:_08/08/2022
+    **********************************************************************************/-->
+<!DOCTYPE html>
+<html>
+<head>    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step5</title>
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #04AA6D;
+            color: white;
+        }
+    </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1> IT Discussions.</h1>
+    <p id="demo"></p>
+    <script>
+        //Create the XHR object
+        var xhttp = new XMLHttpRequest();
+        //Open the file
+        xhttp.open("GET", "dataset_r.xml", false);
+        //Send the request
+        xhttp.send();
+        // Read data
+        xmlDoc = xhttp.responseXML;
+        console.log(xmlDoc);
+
+        let output = "<table border='1'>";
+        output += "<tr>";
+        output += "<th colspan='2'>" + "Author" + "</th>";
+        output += "<th>" + "Category" + "</th>";
+        output += "<th>" + "Content" + "</th>";
+        output += "<th>" + "id" + "</th>";
+        output += "<th>" + "link" + "</th>";
+        output += "<th>" + "Updated" + "</th>";
+        output += "<th>" + "published" + "</th>";
+        output += "<th>" + "title" + "</th>";
+        output += "</tr><tr>";
+        output += "<th>" + "Name" + "</th>"
+        output += "<th>" + "Link" + "</th>"
+        output += "<th></th>"
+        output += "<th></th><th></th><th></th><th></th><th></th><th></th>"
+        output += "</tr>"
+
+        length = xmlDoc.getElementsByTagName("entry").length
+        var entries = xmlDoc.getElementsByTagName("entry");
+        for (let i = 0; i < length; i++) {
+            let entry = xmlDoc.getElementsByTagName("entry")[i];
+            output += `<tr>`
+            output += `<td>${entry.children[0].children[0].innerHTML}</td>`;
+            output += `<td><a href='${entry.children[0].children[1].innerHTML}'>${entry.children[0].children[1].innerHTML}</a></td>`;
+            output += `<td>${entry.children[1].getAttribute("term")}</td>`;
+            output += `<td>${$(entry).find("content").text()}</td>`;
+            output += `<td>${entry.children[3].innerHTML}</td>`;
+            output += `<td><a href='${entry.children[4].getAttribute("href")}'>${entry.children[4].getAttribute("href")}</a></td>`;
+            output += `<td>${entry.children[5].innerHTML}</td>`;
+            output += `<td>${entry.children[6].innerHTML}</td>`;
+            output += `<td>${entry.children[7].innerHTML}</td>`;
+            output += `</tr>`
+
+        }
+
+        document.getElementById("demo").innerHTML = output;
+    </script>
+</body>
+
+</html>
+
+<!--/********************************************************************************* *
+ ITC5202 – Project_Phase2 * I declare that this assignment is my own work in accordance with Humber Academic Policy.
+* No part of this assignment has been copied manually or electronically from any other source *
+ (including web sites) or distributed to other students. * * 
+ Name: _Hardeep Singh_ Student ID: __N01512362__ Date: _13-06-2022_ 
+ * ********************************************************************************/!-->
